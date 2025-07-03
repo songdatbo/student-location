@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,31 +26,60 @@
       margin-top: 1em;
       font-weight: bold;
     }
+    #copyBtn {
+      display: none;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #copiedMessage {
+      margin-top: 0.5em;
+      color: green;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>📍 แบบฟอร์ม ระบุตำแหน่งของนักศึกษาอินเตอร์พัฒนศาสตร์</h2>
-    <p>ให้นักเรียนกดปุ่มเพื่อแจ้งตำแหน่งครับแล้วแคปหน้าจอครับ</p>
+    <p>ให้นักเรียนกดปุ่มเพื่อแจ้งตำแหน่งครับ แล้วแคปหน้าจอหรือคัดลอกพิกัดก็ได้ครับ</p>
+    
     <button onclick="getLocation()">ระบุตำแหน่งที่ฉันอยู่</button>
     <div id="output"></div>
+    
+    <button id="copyBtn" onclick="copyCoordinates()">📋 คัดลอกพิกัด</button>
+    <div id="copiedMessage">✅ คัดลอกแล้ว!</div>
   </div>
 
   <script>
     function getLocation() {
       const output = document.getElementById("output");
+      const copyBtn = document.getElementById("copyBtn");
+      const copiedMessage = document.getElementById("copiedMessage");
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
           output.innerHTML = "Latitude: " + lat + "<br>Longitude: " + lon;
+          copyBtn.style.display = "inline-block";
+          copiedMessage.style.display = "none";
         }, function(error) {
           output.innerHTML = "Error getting location: " + error.message;
+          copyBtn.style.display = "none";
         });
       } else {
         output.innerHTML = "Geolocation is not supported by this browser.";
+        copyBtn.style.display = "none";
       }
+    }
+
+    function copyCoordinates() {
+      const text = document.getElementById("output").innerText;
+      navigator.clipboard.writeText(text).then(function() {
+        document.getElementById("copiedMessage").style.display = "block";
+      });
     }
   </script>
 </body>
